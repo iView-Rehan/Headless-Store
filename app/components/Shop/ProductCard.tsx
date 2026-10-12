@@ -12,6 +12,7 @@ export function ProductCard({
   const inStock =
     (item.options?.length ?? 0) === 0 &&
     item.inventory?.availabilityStatus !== 'OUT_OF_STOCK';
+  const customizable = ((item as any).modifiers?.length ?? 0) > 0;
   return (
     <div className="flex flex-col h-full">
       <a
@@ -38,7 +39,7 @@ export function ProductCard({
           </span>
         </div>
       </a>
-      {quickBuy ? (
+      {quickBuy && !customizable ? (
         <div className="mt-3">
           {inStock ? (
             <a
@@ -60,6 +61,16 @@ export function ProductCard({
               Choose options
             </a>
           )}
+        </div>
+      ) : null}
+      {quickBuy && customizable ? (
+        <div className="mt-3">
+          <a
+            className="btn-main !py-2 !px-4 !text-xs"
+            href={`/product-page/${item.slug}`}
+          >
+            Customize
+          </a>
         </div>
       ) : null}
     </div>

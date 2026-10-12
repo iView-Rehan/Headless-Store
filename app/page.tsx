@@ -35,6 +35,10 @@ export default async function Home() {
           }))
       )
     );
+    console.log(
+      'HOME categories:',
+      JSON.stringify(productsForCategories, null, 2)
+    );
   } catch (e) {}
 
   let products: productsV3.V3Product[] = [];
@@ -46,6 +50,8 @@ export default async function Home() {
           { fields: ['CURRENCY'] }
         )
       ).products ?? [];
+
+    console.log('HOME products:', JSON.stringify(products, null, 2));
   } catch (e) {}
 
   let events: wixEvents.Event[] = [];

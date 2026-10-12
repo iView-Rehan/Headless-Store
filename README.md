@@ -1,78 +1,137 @@
-# A Wix Events and Wix eCommerce Next.js Music Tour Template
+# Headless Store
 
-> Join the [Wix Headless community on Discord](https://discord.gg/47gUT9KabP) to get official support, interact with fellow Wix Headless developers and get updates on new releases.
+A headless storefront built with Next.js (App Router) and Wix Headless. It sells products, takes event bookings and lets customers design their own T-shirt, with Wix handling the catalog, events, media, cart, checkout and member login.
 
-![Template showcase](docs/media/template-showcase.gif)
+## Features
 
-This template is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app). It uses [Wix Headless](https://dev.wix.com/api/sdk/about-wix-headless/overview) to leverage the Wix Events and Wix Stores business solutions for managing event ticketing and a store.
+- Home page with hero, product slider, category tiles and an upcoming events slider
+- Shop page with product grid and quick buy
+- Product detail page with image gallery, options and variants, add to cart, buy now, back-in-stock notification
+- Event detail page with ticket selection, schedule and share links
+- Cart sidebar and redirect to Wix-hosted checkout
+- Member login and logout
+- Design studio (`/studio`): upload artwork, place it on a live T-shirt preview, order it with the print file attached
+- Static pages: FAQ, Terms & conditions, Shipping & returns
 
-## Local Development
+## Tech stack
 
-Prerequisites:
+- Next.js (App Router), React, TypeScript
+- Wix SDK: `@wix/sdk`, `@wix/stores` (products V3), `@wix/events`, `@wix/ecom`, `@wix/ricos`
+- Tailwind CSS, Flowbite React
 
-1. [Create a Wix Headless project](https://dev.wix.com/docs/go-headless/getting-started/setup/general-setup/create-a-project)
-2. [Add the Stores and Events apps to your project](https://dev.wix.com/docs/go-headless/getting-started/setup/general-setup/add-apps-to-a-project)
-3. Authorize the template with [quick start deployment](https://manage.wix.com/headless-funnel-nextjs/select-platform?templateName=commerce-ticketing) or by [creating an OAuth app](https://dev.wix.com/docs/go-headless/getting-started/setup/authorization/create-an-o-auth-app-for-visitors-and-members)
-4. [Set up your project's eCommerce settings](https://www.wix.com/my-account/site-selector/?buttonText=Select%20Site&title=Select%20a%20Site&autoSelectOnSingleSite=true&actionUrl=https:%2F%2Fwww.wix.com%2Fdashboard%2F%7B%7BmetaSiteId%7D%7D%2Fstore/settings)
+## Requirements
 
-> **Note:** You must add at least one **Authorization Redirect URI** to ensure authentication works properly. The URI must exactly match the address in your site or app where Wix should redirect members after they log in via a Wix-managed authentication page. For security reasons, Wix only redirects site members to URIs you've explicitly approved. For step-by-step instructions, see [Add Allowed Authorization Redirect URIs](https://dev.wix.com/docs/go-headless/get-started/setup/manage-urls/add-allowed-authorization-redirect-uris).
+- Node.js 18 or 20
+- A Wix site with Stores and Events installed
+- A Wix Headless OAuth app and its client ID
 
-Set up environment variables to consume Wix Headless APIs:
+## Setup
 
-1. In the template's root folder, create a file for the local environment variables:
-   ```sh
-   cp .env.template .env.local.
-   ```
-2. In the new **.env.local** file, paste the OAuth app client ID after `NEXT_PUBLIC_WIX_CLIENT_ID=`.
+```bash
+npm install
+```
 
-Run the development server:
+Create `.env.local` in the project root:
 
-1. Run either:
+```
+NEXT_PUBLIC_WIX_CLIENT_ID=your-wix-client-id
+WIX_API_KEY=your-wix-api-key
+WIX_SITE_ID=your-wix-site-id
+NEXT_PUBLIC_CUSTOM_PRODUCT_SLUG=custom-tee
+```
 
-   ```sh
-   yarn dev
-   ```
+`WIX_API_KEY` and `WIX_SITE_ID` are server-only and used by the design upload route. The slug variable is optional and defaults to `custom-tee`.
 
-   or
+Without this variable the site shows a "Page not available" message.
 
-   ```sh
-   npm i
-   npm run dev
-   ```
+In the Wix dashboard, open your headless OAuth app and add your local and deployed URLs to the allowed domains and redirect domains (for example `http://localhost:3000` and your Vercel URL). Login and checkout redirects fail without this.
 
-2. Open http://localhost:3000 in your browser to see the template home page.
+## Scripts
 
-Edit the template:
+```bash
+npm run dev     # start dev server at http://localhost:3000
+npm run build   # production build (runs lint)
+npm run start   # run the production build
+```
 
-- Start editing the homepage by modifying **app/page.tsx**. The page auto-updates as you edit the file.
-- Edit any other page using the pattern **app/page.tsx**. For more information, see [Defining Routes](https://beta.nextjs.org/docs/routing/defining-routes) in the Next.js documentation.
+## Custom tee studio
 
-# Deployment
+Customers upload an image at `/studio`, drag and scale it on a T-shirt preview, choose colour and size, and add it to the cart. The design is stored in the Wix Media Manager and attached to the order line as free-text fields.
 
-You can deploy this repository using any platform which supports Next.js Version 13 and [App Router](https://nextjs.org/docs/app).
+Wix setup:
 
-The repository requires a single environment variable: `NEXT_PUBLIC_WIX_CLIENT_ID`, which should contain a client ID authorizing access to a Wix project's data.
+1. Create a Wix Stores product with the slug `custom-tee` (or set `NEXT_PUBLIC_CUSTOM_PRODUCT_SLUG`).
+2. Add a swatch option named `Color` (with colour codes) and a text option named `Size`, then create the variants.
+3. Add three free-text modifiers with a max length of at least 200 characters: `Design file`, `Design preview`, `Placement`.
+4. Create an API key (Wix account settings, API keys) with the Media Manager permission, and copy the site ID.
+5. Add `WIX_API_KEY` and `WIX_SITE_ID` to `.env.local` and to Vercel.
 
-# Learn More
+In the Wix dashboard, each order line shows the three fields. `Design file` is the transparent print-ready PNG. `Design preview` is the mockup image shown in the cart.
 
-To learn how to customize the template and add more functionality using Wix APIs, see the [Wix JavaScript SDK reference](https://dev.wix.com/api/sdk).
+How it works:
 
-This template is written in [Next.js](https://nextjs.org/docs) 13 using the [Next.js App Router](https://nextjs.org/docs/app).
+1. `components/Studio/Studio.tsx` renders the live preview and exports the design on the client.
+2. `app/api/upload-design/route.ts` validates the image and uploads it to the Media Manager.
+3. The cart line is added with `customTextFields` holding the file URLs.
 
-To learn more about Next.js, see:
+Files are limited to 4 MB per upload because of Vercel request limits.
 
-- [Next.js documentation](https://nextjs.org/docs): Learn about Next.js features and APIs.
-- [Learn Next.js](https://nextjs.org/learn): An interactive Next.js tutorial.
+## Project structure
 
-Additionally, this template uses the following libraries and features:
+```
+app/
+  page.tsx                  Home (fetches products, categories, events)
+  shop/                     Product list
+  product-page/[slug]/      Product detail
+  events/[slug]/            Event detail and tickets
+  schedule/[slug]/          Full event schedule
+  cart/                     Cart page
+  faq/ terms/ shipping/     Info pages
+  studio/                   Design studio page
+  api/                      quick-buy, redirect-to-checkout, upload-design routes
+  components/
+    HomeScreen/             Home layout
+    Slider/                 Horizontal slider with prev/next
+    Shop/                   Shop grid and ProductCard
+    Events/                 Events slider
+    Product/                Sidebar, options, swatches, tags
+    Layout/                 Header, nav drawer, footer, logo, page headers
+    Studio/                 Design studio editor
+    Tee/                    T-shirt mockup and hero preview
+    Cart/ CartItem/ CartBag/ Cart UI
+  hooks/                    Wix client and cart hooks
+  utils/                    Formatters and test IDs
+  constants.ts              Brand details and app constants
+  globals.css               Theme tokens and shared component styles
+```
 
-- [React Server Components](https://nextjs.org/docs/advanced-features/react-18/server-components)
-- [TypeScript](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-9.html)
-- [TanStack Query v4](https://tanstack.com/query/latest)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [Flowbite](https://flowbite.com/)
-- [Wix client SDK](https://dev.wix.com/api/sdk/introduction)
+## Customising
 
-# Next.js and Wix Integration Guide
+- **Brand name, tagline, contact details:** edit `BRAND` in `app/constants.ts`.
+- **Colours:** edit the CSS variables at the top of `app/globals.css`. Components also use the same hex values directly (`#2e4a40` pine, `#f5f6f1` paper, `#e9a23b` accent).
+- **Fonts:** Bricolage Grotesque and DM Sans, loaded by the `<link>` tags in `app/layout.tsx`.
+- **Page copy:** FAQ, Terms and Shipping text lives in their `page.tsx` files and in `components/ShippingAndReturns`.
+- **Products, events and categories:** managed in the Wix dashboard, not in code.
 
-See the comprehensive [integration guide](./docs/integration-guide.md) for step-by-step instructions on how to configure Wix as your headless Booking solution using Next.js on Vercel or Netlify.
+## Data flow
+
+1. Server pages call the Wix client (`app/hooks/useWixClientServer.ts`) to fetch products and events.
+2. Cards link to `/product-page/[slug]` and `/events/[slug]`, which fetch the full item on the server.
+3. Client components (`ProductSidebar`, `Events`, cart) handle selection state and cart actions through `useWixClient`.
+4. Checkout creates a redirect session and sends the customer to Wix-hosted checkout, then back to `/stores-success` or `/events-success`.
+
+## Deploying to Vercel
+
+1. Push the repo to GitHub.
+2. Import it on Vercel (framework is detected as Next.js).
+3. Add `NEXT_PUBLIC_WIX_CLIENT_ID` under Environment Variables.
+4. Deploy, then add the Vercel URL to the allowed domains in your Wix OAuth app.
+
+Every push to `main` redeploys automatically.
+
+## Troubleshooting
+
+- **Images do not load:** add `static.wixstatic.com` to `images.remotePatterns` in `next.config.js`.
+- **Build fails on formatting:** run `npx prettier --write "app/**/*.{ts,tsx,css}"`.
+- **Login or checkout redirect fails:** the current domain is missing from the Wix OAuth app settings.
+- **Product description shows raw tags:** descriptions are HTML and are rendered with `dangerouslySetInnerHTML` in `ProductSidebar.tsx`.

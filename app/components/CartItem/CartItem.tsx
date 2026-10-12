@@ -71,11 +71,39 @@ export const CartItem = ({
 
   const slug = item.attributes?.url?.split('/').pop() ?? '';
 
+  const lineName = (line: any) =>
+    String(line.name?.translated ?? line.name?.original ?? '');
+  const lineText = (line: any) =>
+    line.colorInfo?.translated ||
+    line.plainText?.translated ||
+    line.plainText?.original;
+  const allLines = item.attributes?.descriptionLines ?? [];
+  const isDesignLine = (line: any) => {
+    const text = String(lineText(line) ?? '');
+    return (
+      /^https:\/\//.test(text) ||
+      /^Front \|/.test(text) ||
+      /^(design|placement|print file|preview image)/i.test(lineName(line))
+    );
+  };
+  const previewLine = allLines.find((l) => /preview/i.test(lineName(l)));
+  const previewUrl = previewLine ? String(lineText(previewLine) ?? '') : '';
+  const [previewFailed, setPreviewFailed] = useState(false);
+  const showPreview = /^https:\/\//.test(previewUrl) && !previewFailed;
+
   return (
     <li className="flex flex-col py-4" {...rest}>
       <div className="flex flex-row gap-4 py-4">
         <div className="w-20 h-20 bg-violet relative overflow-hidden z-0">
-          {slug ? (
+          {showPreview ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={previewUrl}
+              alt="Your custom design"
+              className="w-full h-full object-cover"
+              onError={() => setPreviewFailed(true)}
+            />
+          ) : slug ? (
             <Link href={`/product-page/${slug}`}>
               <div onClick={closeSidebarIfPresent}>
                 <WixMediaImage
@@ -93,7 +121,7 @@ export const CartItem = ({
             />
           )}
         </div>
-        <div className="flex-1">
+        <div className="flex-1 min-w-0">
           <div className="flex-1 flex flex-col text-base">
             {slug ? (
               <Link href={`/product-page/${slug}`}>
@@ -108,17 +136,24 @@ export const CartItem = ({
             )}
           </div>
           <span>{price}</span>
-          {item.attributes?.descriptionLines?.length ? (
+          {allLines.length ? (
             <div className="mt-1">
-              {item.attributes?.descriptionLines?.map((line) => (
-                <span
-                  key={line.name?.translated}
-                  className="text-12 leading-tight text-gray-500 block"
-                >
-                  {line.name?.translated}:{' '}
-                  {line.colorInfo?.translated || line.plainText?.translated}
+              {previewLine ? (
+                <span className="text-12 leading-tight text-gray-500 block">
+                  Custom design
                 </span>
-              ))}
+              ) : null}
+              {allLines
+                .filter((line) => !isDesignLine(line))
+                .map((line) => (
+                  <span
+                    key={line.name?.translated}
+                    className="text-12 leading-tight text-gray-500 block break-all"
+                  >
+                    {line.name?.translated}:{' '}
+                    {line.colorInfo?.translated || line.plainText?.translated}
+                  </span>
+                ))}
             </div>
           ) : null}
           {!hideButtons && (
@@ -134,7 +169,11 @@ export const CartItem = ({
           )}
         </div>
         {!hideButtons && (
-          <button className="flex" onClick={handleRemove}>
+          <button
+            className="flex shrink-0 self-start"
+            onClick={handleRemove}
+            aria-label="Remove item"
+          >
             <svg
               fill="none"
               className="w-4 h-4"

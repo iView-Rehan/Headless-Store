@@ -17,13 +17,16 @@ const Footer = () => (
       <div className="max-w-xs">
         <Logo />
         <p className="mt-4 text-sm opacity-75 leading-relaxed">
-          Small-batch homewares, and hosted evenings to enjoy them with friends.
+          Everyday goods, hosted evenings and custom tees printed to order.
         </p>
       </div>
       <div className={col}>
         <span className={head}>Shop</span>
         <a href="/shop" className="opacity-75 hover:opacity-100">
           All products
+        </a>
+        <a href="/studio" className="opacity-75 hover:opacity-100">
+          Design a tee
         </a>
         <a href="/#events" className="opacity-75 hover:opacity-100">
           Upcoming events
