@@ -14,8 +14,7 @@ export default async function StoresCategoryPage() {
         )
       ).products ?? [];
 
-      console.log({items});
-      
+    console.log({ items });
   } catch (err) {
     console.error(err);
   }
