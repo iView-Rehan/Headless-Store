@@ -6,40 +6,13 @@ import { WixMediaImage } from '@app/components/Image/WixMediaImage';
 import { Slider } from '@app/components/Slider/Slider';
 import { ProductCard } from '@app/components/Shop/ProductCard';
 import { BRAND } from '@app/constants';
+import { HeroTee } from '@app/components/Tee/HeroTee';
 
 const perks = [
   { title: 'Free delivery', text: 'On every order over $75' },
   { title: 'Thirty-day returns', text: 'Changed your mind? Send it back' },
-  { title: 'Small-group events', text: 'Never more than twelve guests' },
+  { title: 'Printed to order', text: 'Custom tees ship in 3 to 5 days' },
 ];
-
-function HeroArt() {
-  return (
-    <svg
-      viewBox="0 0 560 520"
-      className="w-full h-auto rounded-[14px]"
-      role="img"
-      aria-label="Still life of vessels on a shelf"
-    >
-      <rect width="560" height="520" fill="#e3e7de" />
-      <circle cx="372" cy="196" r="98" fill="#e9a23b" />
-      <path d="M96 400V212a62 62 0 0 1 124 0v188z" fill="#2e4a40" />
-      <path d="M236 400v-52a24 24 0 0 1 48 0v52z" fill="#f5f6f1" />
-      <path d="M300 400a70 70 0 0 1 140 0z" fill="#17231f" />
-      <rect x="462" y="318" width="46" height="82" rx="6" fill="#2e4a40" />
-      <rect x="470" y="302" width="30" height="16" rx="4" fill="#17231f" />
-      <rect x="40" y="400" width="480" height="8" rx="2" fill="#17231f" />
-      <rect
-        x="64"
-        y="408"
-        width="432"
-        height="4"
-        fill="#17231f"
-        opacity="0.12"
-      />
-    </svg>
-  );
-}
 
 export function HomeScreen({
   events,
@@ -68,22 +41,22 @@ export function HomeScreen({
       >
         <div>
           <h1 className="text-5xl sm:text-7xl lg:text-[84px]">
-            Goods for the home. Evenings to share.
+            Everyday goods. Tees made your way.
           </h1>
           <p className="mt-6 max-w-md text-lg opacity-80">
-            Small-batch homewares delivered to your door, and hosted evenings
-            you can book in a minute.
+            Shop small-batch homewares, or upload your own artwork and have it
+            printed on a tee. Book a hosted evening while you are at it.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <a href="/shop" className="btn-main">
-              Shop the collection
+            <a href="/studio" className="btn-main">
+              Design your tee
             </a>
-            <a href="#events" className="btn-line">
-              Book an event
+            <a href="/shop" className="btn-line">
+              Shop the collection
             </a>
           </div>
         </div>
-        <HeroArt />
+        <HeroTee />
       </section>
 
       <section className="border-y border-[color:var(--line)]">
@@ -97,6 +70,46 @@ export function HomeScreen({
             </li>
           ))}
         </ul>
+      </section>
+
+      <section className="container-x pt-16 sm:pt-24">
+        <div className="grid gap-10 lg:grid-cols-[1fr_1.5fr] items-start">
+          <div>
+            <h2 className="section-title">
+              Your art, on a tee, in three steps
+            </h2>
+            <a href="/studio" className="btn-main mt-6">
+              Open the studio
+            </a>
+          </div>
+          <ol className="grid gap-6 sm:grid-cols-3">
+            {[
+              [
+                '01',
+                'Upload',
+                'Drop in a PNG, JPG or WebP. Transparent PNGs print best.',
+              ],
+              [
+                '02',
+                'Place',
+                'Drag, resize and rotate it on the shirt. Pick a colour and size.',
+              ],
+              [
+                '03',
+                'Order',
+                'We print the exact file you placed, then ship it.',
+              ],
+            ].map(([n, title, text]) => (
+              <li key={n} className="border-t border-[color:var(--line)] pt-4">
+                <span className="text-sm opacity-60">{n}</span>
+                <h3 className="font-default text-xl font-semibold mt-1">
+                  {title}
+                </h3>
+                <p className="mt-2 text-sm opacity-75">{text}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
       </section>
 
       {sliderProducts.length ? (

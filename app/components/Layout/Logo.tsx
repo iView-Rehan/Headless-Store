@@ -3,8 +3,11 @@ import { BRAND } from '@app/constants';
 export function LogoMark({ className = 'w-8 h-8' }: { className?: string }) {
   return (
     <svg viewBox="0 0 32 32" className={className} aria-hidden="true">
-      <path d="M5 29V15a11 11 0 0 1 22 0v14z" fill="currentColor" />
-      <circle cx="16" cy="17" r="4" fill="#e9a23b" />
+      <path
+        d="M11 4 3 8.5 5.5 13 9 11.5V27h14V11.5l3.5 1.5L29 8.5 21 4q-5 5-10 0Z"
+        fill="currentColor"
+      />
+      <circle cx="16" cy="18" r="3.2" fill="#e9a23b" />
     </svg>
   );
 }

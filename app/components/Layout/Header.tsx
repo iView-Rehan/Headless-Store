@@ -6,6 +6,7 @@ import testIds from '@app/utils/test-ids';
 
 const links = [
   { href: '/shop', label: 'Shop' },
+  { href: '/studio', label: 'Design a tee' },
   { href: '/#events', label: 'Events' },
   { href: '/faq', label: 'FAQ' },
 ];

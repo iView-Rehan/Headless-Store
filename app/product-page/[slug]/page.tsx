@@ -1,5 +1,7 @@
 import { getWixClient } from '@app/hooks/useWixClientServer';
 import { ProductView } from '@app/components/Product/ProductView';
+import { Studio } from '@app/components/Studio/Studio';
+import { isCustomizable } from '@app/utils/customizable';
 
 export default async function StoresCategoryPage({ params }: any) {
   if (!params.slug) {
@@ -19,6 +21,22 @@ export default async function StoresCategoryPage({ params }: any) {
       ],
     }
   );
+
+  if (product && isCustomizable(product)) {
+    return (
+      <>
+        <Studio product={product} slug={product.slug!} embedded />
+        {product.plainDescription ? (
+          <div className="container-x pt-10">
+            <div
+              className="rich-html max-w-2xl opacity-90"
+              dangerouslySetInnerHTML={{ __html: product.plainDescription }}
+            />
+          </div>
+        ) : null}
+      </>
+    );
+  }
   return <ProductView product={product!} />;
 }
 

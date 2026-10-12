@@ -44,3 +44,17 @@ async function addItemFromCart(
   }
   return data;
 }
+
+export const useAddItemToCartAsync = () => {
+  const wixClient = useWixClient();
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: (item: AddToCartCatalogItem) =>
+      addItemFromCart(wixClient, item),
+    onSuccess: (data) => {
+      queryClient.setQueryData(['cart'], data.cart);
+    },
+  });
+  return mutation.mutateAsync;
+};

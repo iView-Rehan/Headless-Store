@@ -8,6 +8,7 @@ import { Logo } from '../Logo';
 const navbarMainItems = [
   { ref: '/', label: 'Home' },
   { ref: '/shop', label: 'Shop' },
+  { ref: '/studio', label: 'Design a tee' },
   { ref: '/#events', label: 'Events' },
 ];
 

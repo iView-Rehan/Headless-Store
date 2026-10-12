@@ -13,6 +13,9 @@ export default async function StoresCategoryPage() {
           { fields: ['CURRENCY'] }
         )
       ).products ?? [];
+
+      console.log({items});
+      
   } catch (err) {
     console.error(err);
   }
